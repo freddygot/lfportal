@@ -1,0 +1,18 @@
+<!-- journals/templates/journals/appointment_detail.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ appointment.title }}</title>
+</head>
+<body>
+    <h2>{{ appointment.title }}</h2>
+    <p><strong>Client:</strong> {{ appointment.client }}</p>
+    <p><strong>Date:</strong> {{ appointment.date }}</p>
+    <p><strong>Time:</strong> {{ appointment.time }}</p>
+    <p><strong>Journal Entry:</strong> {% if appointment.journal_entry %}<a href="{% url 'journal_detail' appointment.journal_entry.pk %}">{{ appointment.journal_entry.title }}</a>{% else %}None{% endif %}</p>
+    <a href="{% url 'appointment_edit' appointment.pk %}">Edit</a> | 
+    <a href="{% url 'appointment_delete' appointment.pk %}">Delete</a>
+    <p><a href="{% url 'appointment_list' %}">Back to list</a></p>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!-- templates/journals/journal_list.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Journal List</title>
+</head>
+<body>
+    <h2>Journal List</h2>
+    <ul>
+        {% for journal in journals %}
+            <li><a href="{% url 'journal_detail' journal.pk %}">{{ journal.title }}</a> ({{ journal.client }})</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'journal_create' %}">Create new journal</a>
+</body>
+</html>

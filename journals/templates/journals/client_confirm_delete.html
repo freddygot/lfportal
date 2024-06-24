@@ -1,0 +1,16 @@
+<!-- journals/templates/journals/client_confirm_delete.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Client</title>
+</head>
+<body>
+    <h2>Are you sure you want to delete "{{ client.name }}"?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirm Delete</button>
+    </form>
+    <p><a href="{% url 'client_list' %}">Back to list</a></p>
+</body>
+</html>

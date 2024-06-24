@@ -1,0 +1,18 @@
+<!-- templates/journals/journal_detail.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ journal.title }}</title>
+</head>
+<body>
+    <h2>{{ journal.title }}</h2>
+    <p>{{ journal.content }}</p>
+    <p><strong>Client:</strong> {{ journal.client }}</p>
+    <p><strong>Created:</strong> {{ journal.created_at }}</p>
+    <p><strong>Updated:</strong> {{ journal.updated_at }}</p>
+    <a href="{% url 'journal_edit' journal.pk %}">Edit</a> | 
+    <a href="{% url 'journal_delete' journal.pk %}">Delete</a>
+    <p><a href="{% url 'journal_list' %}">Back to list</a></p>
+</body>
+</html>

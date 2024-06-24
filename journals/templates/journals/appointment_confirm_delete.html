@@ -1,0 +1,16 @@
+<!-- journals/templates/journals/appointment_confirm_delete.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Appointment</title>
+</head>
+<body>
+    <h2>Are you sure you want to delete "{{ appointment.title }}"?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirm Delete</button>
+    </form>
+    <p><a href="{% url 'appointment_list' %}">Back to list</a></p>
+</body>
+</html>

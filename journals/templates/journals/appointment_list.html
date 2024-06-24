@@ -1,0 +1,17 @@
+<!-- journals/templates/journals/appointment_list.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Appointment List</title>
+</head>
+<body>
+    <h2>Appointment List</h2>
+    <ul>
+        {% for appointment in appointments %}
+            <li><a href="{% url 'appointment_detail' appointment.pk %}">{{ appointment.title }}</a> ({{ appointment.client }}) on {{ appointment.date }} at {{ appointment.time }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'appointment_create' %}">Create new appointment</a>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!-- journals/templates/journals/client_detail.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ client.name }}</title>
+</head>
+<body>
+    <h2>{{ client.name }}</h2>
+    <p>Email: {{ client.email }}</p>
+    <a href="{% url 'client_edit' client.pk %}">Edit</a> | 
+    <a href="{% url 'client_delete' client.pk %}">Delete</a>
+    <p><a href="{% url 'client_list' %}">Back to list</a></p>
+</body>
+</html>

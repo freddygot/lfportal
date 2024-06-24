@@ -1,0 +1,17 @@
+<!-- journals/templates/journals/client_list.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Client List</title>
+</head>
+<body>
+    <h2>Client List</h2>
+    <ul>
+        {% for client in clients %}
+            <li><a href="{% url 'client_detail' client.pk %}">{{ client.name }}</a> ({{ client.email }})</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'client_create' %}">Create new client</a>
+</body>
+</html>
