@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'authentication',
     'journals',
     'dashboard',
+    'kurs',
 ]
 
 MIDDLEWARE = [

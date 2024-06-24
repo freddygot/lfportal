@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}{{ kurs.navn }}{% endblock %}
+
+{% block content %}
+<h2>{{ kurs.navn }}</h2>
+<p>{{ kurs.beskrivelse }}</p>
+<h3>Moduler</h3>
+<ul>
+    {% for modul in kurs.moduler.all %}
+        <li><a href="{% url 'modul_detaljer' kurs.id modul.id %}">{{ modul.navn }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}
