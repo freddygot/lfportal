@@ -1,14 +1,26 @@
+<!-- templates/kurs/kurs_detaljer.html -->
 {% extends "base.html" %}
-
 {% block title %}{{ kurs.navn }}{% endblock %}
-
 {% block content %}
 <h2>{{ kurs.navn }}</h2>
 <p>{{ kurs.beskrivelse }}</p>
+
+<h3>Progresjon: {{ progresjon|floatformat:2 }}%</h3>
+<div class="progress">
+    <div class="progress-bar" role="progressbar" style="width: {{ progresjon }}%;" aria-valuenow="{{ progresjon }}" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+
 <h3>Moduler</h3>
 <ul>
-    {% for modul in kurs.moduler.all %}
-        <li><a href="{% url 'modul_detaljer' kurs.id modul.id %}">{{ modul.navn }}</a></li>
+    {% for modul in moduler %}
+    <li>
+        {{ modul.navn }}
+        {% if modul.id in fullforte_moduler_ids %}
+        <span style="color: green;">(Fullført)</span>
+        {% else %}
+        <a href="{% url 'fullfor_modul' modul.id %}">Fullfør</a>
+        {% endif %}
+    </li>
     {% endfor %}
 </ul>
 {% endblock %}
