@@ -1,11 +1,10 @@
-<!-- templates/kurs/kurs_liste.html -->
 {% extends "base.html" %}
-{% block title %}Kurs Oversikt{% endblock %}
+{% block title %}Kurs Liste{% endblock %}
 {% block content %}
-<h2>Kurs Oversikt</h2>
+<h2>Kurs Liste</h2>
 <ul>
     {% for kurs in kurs %}
-    <li><a href="{% url 'kurs_detaljer' kurs.id %}">{{ kurs.navn }}</a></li>
+        <li><a href="{% url 'kurs_detaljer' kurs.id %}">{{ kurs.navn }}</a></li>
     {% endfor %}
 </ul>
 {% endblock %}

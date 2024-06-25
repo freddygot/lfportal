@@ -1,8 +1,15 @@
 {% extends "base.html" %}
-
 {% block title %}{{ modul.navn }}{% endblock %}
-
 {% block content %}
 <h2>{{ modul.navn }}</h2>
-<p>{{ modul.innhold }}</p>
+<p>{{ modul.beskrivelse }}</p>
+
+<form method="post" action="{% url 'fullfor_modul' modul.id %}">
+    {% csrf_token %}
+    {% if next_modul %}
+        <button type="submit" name="next_modul" value="{{ next_modul.id }}">Neste modul</button>
+    {% else %}
+        <button type="submit" name="fullfor_kurs" value="fullfor_kurs">Fullfør kurs</button>
+    {% endif %}
+</form>
 {% endblock %}

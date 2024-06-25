@@ -9,17 +9,19 @@ class Kurs(models.Model):
         return self.navn
 
 class Modul(models.Model):
-    kurs = models.ForeignKey(Kurs, on_delete=models.CASCADE)
+    kurs = models.ForeignKey(Kurs, related_name='moduler', on_delete=models.CASCADE)
     navn = models.CharField(max_length=100)
-    innhold = models.TextField()
+    beskrivelse = models.TextField()
 
     def __str__(self):
-        return f"{self.kurs.navn} - {self.navn}"
+        return self.navn
 
 class FullfortModul(models.Model):
-    modul = models.ForeignKey(Modul, on_delete=models.CASCADE)
     bruker = models.ForeignKey(User, on_delete=models.CASCADE)
+    modul = models.ForeignKey(Modul, on_delete=models.CASCADE)
     fullfort_dato = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"{self.bruker.username} - {self.modul.navn}"
+class FullfortKurs(models.Model):
+    bruker = models.ForeignKey(User, on_delete=models.CASCADE)
+    kurs = models.ForeignKey(Kurs, on_delete=models.CASCADE)
+    fullfort_dato = models.DateTimeField(auto_now_add=True)
