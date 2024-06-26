@@ -1,16 +1,12 @@
-# authentication/models.py
-from django.db import models
+# models.py i authentication-appen
+
 from django.contrib.auth.models import User
+from django.db import models
 
 class Profile(models.Model):
-    ROLE_CHOICES = [
-        ('admin', 'Administrator'),
-        ('franchisee', 'Franchisee'),
-        ('employee', 'Employee'),
-    ]
-
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    role = models.CharField(max_length=30, choices=[('franchise_taker', 'Franchise-taker'), ('employee', 'Ansatt')])
+    key_metrics = models.JSONField(default=dict)  # JSON-felt for å lagre måltall
 
     def __str__(self):
-        return f'{self.user.username} - {self.get_role_display()}'
+        return f"{self.user.username} - {self.role}"
