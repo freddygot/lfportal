@@ -1,3 +1,5 @@
+<!-- journals/templates/journals/calendar.html -->
+
 {% extends "base.html" %}
 
 {% block title %}Calendar{% endblock %}
@@ -24,6 +26,12 @@
                         <div class="mb-3">
                             <label for="appointmentClient" class="form-label">Client</label>
                             <select id="appointmentClient" class="form-select" required>
+                                <!-- Options will be populated dynamically -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="appointmentService" class="form-label">Service</label>
+                            <select id="appointmentService" class="form-select" required>
                                 <!-- Options will be populated dynamically -->
                             </select>
                         </div>
@@ -63,6 +71,7 @@
             var appointmentForm = document.getElementById('appointmentForm');
             var appointmentTitle = document.getElementById('appointmentTitle');
             var appointmentClient = document.getElementById('appointmentClient');
+            var appointmentService = document.getElementById('appointmentService');
             var appointmentDate = document.getElementById('appointmentDate');
             var appointmentTime = document.getElementById('appointmentTime');
             var journalEntry = document.getElementById('journalEntry');
@@ -85,7 +94,22 @@
                 });
             }
 
+            // Fetch services to populate the dropdown
+            function fetchServices() {
+                $.ajax({
+                    url: '/journals/api/services/',
+                    method: 'GET',
+                    success: function(data) {
+                        appointmentService.innerHTML = data.map(service => `<option value="${service.id}">${service.name}</option>`).join('');
+                    },
+                    error: function(xhr) {
+                        alert('Error fetching services: ' + xhr.responseText);
+                    }
+                });
+            }
+
             fetchClients();  // Load clients initially
+            fetchServices(); // Load services initially
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
@@ -110,6 +134,7 @@
                     currentEvent = info.event;  // Track current event
                     appointmentTitle.value = info.event.title;
                     appointmentClient.value = info.event.extendedProps.client_id;
+                    appointmentService.value = info.event.extendedProps.service_id; // Set service value
                     appointmentDate.value = info.event.start.toISOString().split('T')[0];
                     appointmentTime.value = info.event.start.toISOString().split('T')[1].slice(0, 5);
                     journalEntry.value = info.event.extendedProps.journal_entry_content || '';  // Set journal entry content
@@ -122,6 +147,7 @@
                 var eventData = {
                     title: appointmentTitle.value,
                     client_id: appointmentClient.value,
+                    service_id: appointmentService.value,
                     start: `${appointmentDate.value}T${appointmentTime.value}:00`,  // Combine date and time
                     journal_entry: {
                         id: journalEntryId.value,
@@ -140,6 +166,7 @@
                             currentEvent.setProp('title', response.title);
                             currentEvent.setStart(response.start);
                             currentEvent.setExtendedProp('client', response.client);
+                            currentEvent.setExtendedProp('service', response.service); // Update service prop
                             currentEvent.setExtendedProp('journal_entry_content', response.journal_entry.content);
                             currentEvent.setExtendedProp('journal_entry_id', response.journal_entry.id);
                             appointmentForm.reset();
@@ -162,6 +189,7 @@
                                 title: response.title,
                                 start: response.start,
                                 client: response.client,
+                                service: response.service, // Set service prop
                                 journal_entry_content: response.journal_entry.content,
                                 journal_entry_id: response.journal_entry.id
                             });
@@ -198,9 +226,3 @@
     </script>
 </body>
 {% endblock %}
-
-
-
-
-
-

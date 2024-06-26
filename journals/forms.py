@@ -1,6 +1,6 @@
 # journals/forms.py
 from django import forms
-from .models import Client, Journal, Appointment
+from .models import Client, Journal, Appointment, Service
 
 class ClientForm(forms.ModelForm):
     class Meta:
@@ -15,4 +15,4 @@ class JournalForm(forms.ModelForm):
 class AppointmentForm(forms.ModelForm):
     class Meta:
         model = Appointment
-        fields = ['title', 'psychologist', 'client', 'date', 'time', 'journal_entry']
+        fields = ['title', 'psychologist', 'client', 'date', 'time', 'journal_entry', 'service']

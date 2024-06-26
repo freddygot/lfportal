@@ -1,4 +1,3 @@
-# /mnt/data/urls.py
 from django.urls import path
 from . import views
 
@@ -20,7 +19,7 @@ urlpatterns = [
     # Appointment URLs
     path('appointments/', views.appointment_list, name='appointment_list'),
     path('appointments/<int:pk>/', views.appointment_detail, name='appointment_detail'),
-    path('appointments/new/', views.appointment_create, name='appointment_create'),
+    path('appointments/new/', views.create_appointment, name='create_appointment'),
     path('appointments/<int:pk>/edit/', views.appointment_edit, name='appointment_edit'),
     path('appointments/<int:pk>/delete/', views.appointment_delete, name='appointment_delete'),
 
@@ -28,11 +27,10 @@ urlpatterns = [
     path('api/appointments/', views.api_appointment_list, name='api_appointment_list'),
     path('api/appointments/create/', views.api_appointment_create, name='api_appointment_create'),
     path('api/appointments/<int:pk>/edit/', views.api_appointment_edit, name='api_appointment_edit'),
-    path('api/clients/', views.api_client_list, name='api_client_list'),
     path('api/appointments/<int:pk>/delete/', views.api_appointment_delete, name='api_appointment_delete'),
-
+    path('api/clients/', views.api_client_list, name='api_client_list'),
+    path('api/services/', views.api_service_list, name='api_service_list'),
 
     # Calendar URL
     path('calendar/', views.calendar_view, name='calendar_view'),
-
 ]

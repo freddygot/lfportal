@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -7,7 +6,7 @@ from django.utils.dateparse import parse_datetime
 from django.core.exceptions import ValidationError
 from django.views.decorators.http import require_http_methods
 import json
-from .models import Client, Journal, Appointment
+from .models import Client, Journal, Appointment, Service
 from .forms import ClientForm, JournalForm, AppointmentForm
 
 # Existing views for clients and journals
@@ -105,7 +104,7 @@ def appointment_detail(request, pk):
     return render(request, 'journals/appointment_detail.html', {'appointment': appointment})
 
 @login_required
-def appointment_create(request):
+def create_appointment(request):
     if request.method == 'POST':
         form = AppointmentForm(request.POST)
         if form.is_valid():
@@ -113,7 +112,7 @@ def appointment_create(request):
             return redirect('appointment_list')
     else:
         form = AppointmentForm()
-    return render(request, 'journals/appointment_form.html', {'form': form})
+    return render(request, 'journals/create_appointment.html', {'form': form})
 
 @login_required
 def appointment_edit(request, pk):
@@ -149,6 +148,8 @@ def api_appointment_list(request):
                 'client_id': appointment.client.id,
                 'journal_entry_content': appointment.journal_entry.content if appointment.journal_entry else '',
                 'journal_entry_id': appointment.journal_entry.id if appointment.journal_entry else None,
+                'service_id': appointment.service.id if appointment.service else None,
+                'service_name': appointment.service.name if appointment.service else '',
                 'psychologist': appointment.psychologist.username,
             }
             for appointment in appointments
@@ -165,8 +166,10 @@ def api_appointment_create(request):
             date = date_time.date()
             time = date_time.time()
             client_id = data.get('client_id')
+            service_id = data.get('service_id')
 
             client = Client.objects.get(id=client_id)
+            service = Service.objects.get(id=service_id)
             journal_entry_data = data.get('journal_entry')
             if journal_entry_data and journal_entry_data.get('id'):
                 journal_entry = Journal.objects.get(id=journal_entry_data['id'])
@@ -185,6 +188,7 @@ def api_appointment_create(request):
                 client=client,
                 date=date,
                 time=time,
+                service=service,
                 journal_entry=journal_entry
             )
             return JsonResponse({
@@ -193,6 +197,10 @@ def api_appointment_create(request):
                 'start': f"{appointment.date}T{appointment.time}",
                 'client': appointment.client.name,
                 'client_id': appointment.client.id,
+                'service': {
+                    'id': appointment.service.id,
+                    'name': appointment.service.name,
+                },
                 'journal_entry': {
                     'id': journal_entry.id,
                     'content': journal_entry.content
@@ -203,6 +211,8 @@ def api_appointment_create(request):
             return JsonResponse({'error': str(e)}, status=400)
         except Client.DoesNotExist:
             return JsonResponse({'error': 'Client does not exist'}, status=404)
+        except Service.DoesNotExist:
+            return JsonResponse({'error': 'Service does not exist'}, status=404)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
@@ -219,6 +229,7 @@ def api_appointment_edit(request, pk):
             appointment = get_object_or_404(Appointment, pk=pk)
             appointment.title = data.get('title')
             appointment.client_id = data.get('client_id')
+            appointment.service_id = data.get('service_id')
             appointment.date = date
             appointment.time = time
 
@@ -243,6 +254,10 @@ def api_appointment_edit(request, pk):
                 'start': f"{appointment.date}T{appointment.time}",
                 'client': appointment.client.name,
                 'client_id': appointment.client.id,
+                'service': {
+                    'id': appointment.service.id,
+                    'name': appointment.service.name,
+                },
                 'journal_entry': {
                     'id': appointment.journal_entry.id,
                     'content': appointment.journal_entry.content
@@ -253,9 +268,11 @@ def api_appointment_edit(request, pk):
             return JsonResponse({'error': str(e)}, status=400)
         except Client.DoesNotExist:
             return JsonResponse({'error': 'Client does not exist'}, status=404)
+        except Service.DoesNotExist:
+            return JsonResponse({'error': 'Service does not exist'}, status=404)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
-        
+
 @csrf_exempt
 @login_required
 @require_http_methods(["DELETE"])
@@ -275,6 +292,12 @@ def api_client_list(request):
         return JsonResponse(data, safe=False)
 
 @login_required
+def api_service_list(request):
+    if request.method == 'GET':
+        services = Service.objects.all()
+        data = [{'id': service.id, 'name': service.name, 'duration': service.duration, 'price': service.price} for service in services]
+        return JsonResponse(data, safe=False)
+
+@login_required
 def calendar_view(request):
     return render(request, 'journals/calendar.html')
-
