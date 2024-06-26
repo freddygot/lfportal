@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Prosedyrer{% endblock %}
+
+{% block content %}
+<h2>Prosedyrer</h2>
+<ul>
+    {% for prosedyre in prosedyrer %}
+        <li><a href="{% url 'prosedyre_detail' prosedyre.pk %}">{{ prosedyre.tittel }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

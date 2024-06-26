@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}{{ prosedyre.tittel }}{% endblock %}
+
+{% block content %}
+<h2>{{ prosedyre.tittel }}</h2>
+<p>{{ prosedyre.beskrivelse }}</p>
+<h3>Punkter</h3>
+<ul>
+    {% for punkt in punkter %}
+        <li>
+            {{ punkt.beskrivelse }}
+            <a href="{% url 'fullfor_punkt' prosedyre.pk punkt.pk %}" class="btn btn-success">Fullfør</a>
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'start_prosedyre' prosedyre.pk %}" class="btn btn-primary">Start prosedyre</a>
+{% endblock %}

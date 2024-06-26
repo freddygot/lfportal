@@ -8,5 +8,6 @@ urlpatterns = [
     path('journals/', include('journals.urls')),  # Legg til denne linjen
     path('', dashboard_view, name='dashboard'),
     path('kurs/', include('kurs.urls')),  # Legg til denne linjen
+    path('prosedyrer/', include('prosedyrer.urls')),
     
 ]

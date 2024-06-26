@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'journals',
     'dashboard',
     'kurs',
+    'prosedyrer',
+
 ]
 
 MIDDLEWARE = [
