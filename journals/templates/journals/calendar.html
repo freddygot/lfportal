@@ -1,223 +1,227 @@
 <!-- journals/templates/journals/calendar.html -->
 
-{% extends "base.html" %}
+{% extends "base_with_sidebar.html" %}
 
 {% block title %}Calendar{% endblock %}
 
 {% block content %}
-<body>
-    <h2>Calendar</h2>
-    <div id="calendar"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h2>Calendar</h2>
+            <div id="calendar"></div>
+        </div>
+    </div>
+</div>
 
-    <!-- Modal for Creating/Editing Appointment -->
-    <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="appointmentModalLabel">Create/Edit Appointment</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="appointmentForm">
-                        <div class="mb-3">
-                            <label for="appointmentClient" class="form-label">Client</label>
-                            <select id="appointmentClient" class="form-select" required>
-                                <!-- Options will be populated dynamically -->
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="appointmentService" class="form-label">Service</label>
-                            <select id="appointmentService" class="form-select" required>
-                                <!-- Options will be populated dynamically -->
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="appointmentDate" class="form-label">Date</label>
-                            <input type="date" class="form-control" id="appointmentDate" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="appointmentTime" class="form-label">Time</label>
-                            <input type="time" class="form-control" id="appointmentTime" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="journalEntry" class="form-label">Journal Entry</label>
-                            <textarea class="form-control" id="journalEntry" rows="4"></textarea>
-                        </div>
-                        <input type="hidden" id="journalEntryId">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" id="deleteAppointment" style="display: none;">Delete</button>
-                    <button type="button" class="btn btn-primary" id="saveAppointment">Save changes</button>
-                </div>
+<!-- Modal for Creating/Editing Appointment -->
+<div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="appointmentModalLabel">Create/Edit Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="appointmentForm">
+                    <div class="mb-3">
+                        <label for="appointmentClient" class="form-label">Client</label>
+                        <select id="appointmentClient" class="form-select" required>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="appointmentService" class="form-label">Service</label>
+                        <select id="appointmentService" class="form-select" required>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="appointmentDate" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="appointmentDate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="appointmentTime" class="form-label">Time</label>
+                        <input type="time" class="form-control" id="appointmentTime" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="journalEntry" class="form-label">Journal Entry</label>
+                        <textarea class="form-control" id="journalEntry" rows="4"></textarea>
+                    </div>
+                    <input type="hidden" id="journalEntryId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" id="deleteAppointment" style="display: none;">Delete</button>
+                <button type="button" class="btn btn-primary" id="saveAppointment">Save changes</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- JavaScript includes -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+<!-- JavaScript includes -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar');
-            var appointmentModal = new bootstrap.Modal(document.getElementById('appointmentModal'));
-            var appointmentForm = document.getElementById('appointmentForm');
-            var appointmentClient = document.getElementById('appointmentClient');
-            var appointmentService = document.getElementById('appointmentService');
-            var appointmentDate = document.getElementById('appointmentDate');
-            var appointmentTime = document.getElementById('appointmentTime');
-            var journalEntry = document.getElementById('journalEntry');
-            var journalEntryId = document.getElementById('journalEntryId');
-            var saveButton = document.getElementById('saveAppointment');
-            var deleteButton = document.getElementById('deleteAppointment');
-            var currentEvent = null;  // Track the current event for editing
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var appointmentModal = new bootstrap.Modal(document.getElementById('appointmentModal'));
+        var appointmentForm = document.getElementById('appointmentForm');
+        var appointmentClient = document.getElementById('appointmentClient');
+        var appointmentService = document.getElementById('appointmentService');
+        var appointmentDate = document.getElementById('appointmentDate');
+        var appointmentTime = document.getElementById('appointmentTime');
+        var journalEntry = document.getElementById('journalEntry');
+        var journalEntryId = document.getElementById('journalEntryId');
+        var saveButton = document.getElementById('saveAppointment');
+        var deleteButton = document.getElementById('deleteAppointment');
+        var currentEvent = null;  // Track the current event for editing
 
-            // Fetch clients to populate the dropdown
-            function fetchClients() {
-                $.ajax({
-                    url: '/journals/api/clients/',
-                    method: 'GET',
-                    success: function(data) {
-                        appointmentClient.innerHTML = data.map(client => `<option value="${client.id}">${client.name}</option>`).join('');
-                    },
-                    error: function(xhr) {
-                        alert('Error fetching clients: ' + xhr.responseText);
-                    }
-                });
-            }
-
-            // Fetch services to populate the dropdown
-            function fetchServices() {
-                $.ajax({
-                    url: '/journals/api/services/',
-                    method: 'GET',
-                    success: function(data) {
-                        appointmentService.innerHTML = data.map(service => `<option value="${service.id}">${service.name}</option>`).join('');
-                    },
-                    error: function(xhr) {
-                        alert('Error fetching services: ' + xhr.responseText);
-                    }
-                });
-            }
-
-            fetchClients();  // Load clients initially
-            fetchServices(); // Load services initially
-
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                events: '/journals/api/appointments/', // URL for fetching appointments
-                selectable: true,
-                select: function(info) {
-                    appointmentForm.reset();
-                    document.getElementById('appointmentModalLabel').innerText = 'Create Appointment';
-                    saveButton.innerText = 'Save changes';
-                    deleteButton.style.display = 'none';  // Hide delete button when creating
-                    appointmentDate.value = info.startStr.split('T')[0];
-                    appointmentTime.value = '12:00';  // Default time
-                    journalEntry.value = '';  // Clear journal entry
-                    journalEntryId.value = '';  // Clear journal entry ID
-                    currentEvent = null;  // Clear current event for creation
-                    appointmentModal.show();
+        // Fetch clients to populate the dropdown
+        function fetchClients() {
+            $.ajax({
+                url: '/journals/api/clients/',
+                method: 'GET',
+                success: function(data) {
+                    appointmentClient.innerHTML = data.map(client => `<option value="${client.id}">${client.name}</option>`).join('');
                 },
-                eventClick: function(info) {
-                    document.getElementById('appointmentModalLabel').innerText = 'Edit Appointment';
-                    saveButton.innerText = 'Update';
-                    deleteButton.style.display = 'block';  // Show delete button when editing
-                    currentEvent = info.event;  // Track current event
-                    appointmentClient.value = info.event.extendedProps.client_id;
-                    appointmentService.value = info.event.extendedProps.service_id; // Set service value
-                    appointmentDate.value = info.event.start.toISOString().split('T')[0];
-                    appointmentTime.value = info.event.start.toISOString().split('T')[1].slice(0, 5);
-                    journalEntry.value = info.event.extendedProps.journal_entry_content || '';  // Set journal entry content
-                    journalEntryId.value = info.event.extendedProps.journal_entry_id || '';  // Set journal entry ID
-                    appointmentModal.show();
+                error: function(xhr) {
+                    alert('Error fetching clients: ' + xhr.responseText);
                 }
             });
+        }
 
-            saveButton.addEventListener('click', function() {
-                var clientName = appointmentClient.options[appointmentClient.selectedIndex].text;
-                var eventData = {
-                    title: clientName,
-                    client_id: appointmentClient.value,
-                    service_id: appointmentService.value,
-                    start: `${appointmentDate.value}T${appointmentTime.value}:00`,  // Combine date and time
-                    journal_entry: {
-                        id: journalEntryId.value,
-                        content: journalEntry.value
-                    }
-                };
-                if (currentEvent) {
-                    // Update existing event
-                    eventData.id = currentEvent.id;
-                    $.ajax({
-                        url: `/journals/api/appointments/${currentEvent.id}/edit/`,
-                        method: 'PUT',
-                        contentType: 'application/json',
-                        data: JSON.stringify(eventData),
-                        success: function(response) {
-                            currentEvent.setProp('title', response.title);
-                            currentEvent.setStart(response.start);
-                            currentEvent.setExtendedProp('client', response.client);
-                            currentEvent.setExtendedProp('service', response.service); // Update service prop
-                            currentEvent.setExtendedProp('journal_entry_content', response.journal_entry.content);
-                            currentEvent.setExtendedProp('journal_entry_id', response.journal_entry.id);
-                            appointmentForm.reset();
-                            appointmentModal.hide();
-                        },
-                        error: function(xhr) {
-                            alert('Error: ' + xhr.responseText);
-                        }
-                    });
-                } else {
-                    // Create new event
-                    $.ajax({
-                        url: '/journals/api/appointments/create/',
-                        method: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify(eventData),
-                        success: function(response) {
-                            calendar.addEvent({
-                                id: response.id,
-                                title: response.title,
-                                start: response.start,
-                                client: response.client,
-                                service: response.service, // Set service prop
-                                journal_entry_content: response.journal_entry.content,
-                                journal_entry_id: response.journal_entry.id
-                            });
-                            calendar.unselect();
-                            appointmentForm.reset();
-                            appointmentModal.hide();
-                        },
-                        error: function(xhr) {
-                            alert('Error: ' + xhr.responseText);
-                        }
-                    });
+        // Fetch services to populate the dropdown
+        function fetchServices() {
+            $.ajax({
+                url: '/journals/api/services/',
+                method: 'GET',
+                success: function(data) {
+                    appointmentService.innerHTML = data.map(service => `<option value="${service.id}">${service.name}</option>`).join('');
+                },
+                error: function(xhr) {
+                    alert('Error fetching services: ' + xhr.responseText);
                 }
             });
+        }
 
-            deleteButton.addEventListener('click', function() {
-                if (currentEvent) {
-                    $.ajax({
-                        url: `/journals/api/appointments/${currentEvent.id}/delete/`,
-                        method: 'DELETE',
-                        success: function(response) {
-                            currentEvent.remove();  // Remove the event from the calendar
-                            appointmentForm.reset();
-                            appointmentModal.hide();
-                        },
-                        error: function(xhr) {
-                            alert('Error: ' + xhr.responseText);
-                        }
-                    });
-                }
-            });
+        fetchClients();  // Load clients initially
+        fetchServices(); // Load services initially
 
-            calendar.render();
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: '/journals/api/appointments/', // URL for fetching appointments
+            selectable: true,
+            select: function(info) {
+                appointmentForm.reset();
+                document.getElementById('appointmentModalLabel').innerText = 'Create Appointment';
+                saveButton.innerText = 'Save changes';
+                deleteButton.style.display = 'none';  // Hide delete button when creating
+                appointmentDate.value = info.startStr.split('T')[0];
+                appointmentTime.value = '12:00';  // Default time
+                journalEntry.value = '';  // Clear journal entry
+                journalEntryId.value = '';  // Clear journal entry ID
+                currentEvent = null;  // Clear current event for creation
+                appointmentModal.show();
+            },
+            eventClick: function(info) {
+                document.getElementById('appointmentModalLabel').innerText = 'Edit Appointment';
+                saveButton.innerText = 'Update';
+                deleteButton.style.display = 'block';  // Show delete button when editing
+                currentEvent = info.event;  // Track current event
+                appointmentClient.value = info.event.extendedProps.client_id;
+                appointmentService.value = info.event.extendedProps.service_id; // Set service value
+                appointmentDate.value = info.event.start.toISOString().split('T')[0];
+                appointmentTime.value = info.event.start.toISOString().split('T')[1].slice(0, 5);
+                journalEntry.value = info.event.extendedProps.journal_entry_content || '';  // Set journal entry content
+                journalEntryId.value = info.event.extendedProps.journal_entry_id || '';  // Set journal entry ID
+                appointmentModal.show();
+            }
         });
-    </script>
-</body>
+
+        saveButton.addEventListener('click', function() {
+            var clientName = appointmentClient.options[appointmentClient.selectedIndex].text;
+            var eventData = {
+                title: clientName,
+                client_id: appointmentClient.value,
+                service_id: appointmentService.value,
+                start: `${appointmentDate.value}T${appointmentTime.value}:00`,  // Combine date and time
+                journal_entry: {
+                    id: journalEntryId.value,
+                    content: journalEntry.value
+                }
+            };
+            if (currentEvent) {
+                // Update existing event
+                eventData.id = currentEvent.id;
+                $.ajax({
+                    url: `/journals/api/appointments/${currentEvent.id}/edit/`,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(eventData),
+                    success: function(response) {
+                        currentEvent.setProp('title', response.title);
+                        currentEvent.setStart(response.start);
+                        currentEvent.setExtendedProp('client', response.client);
+                        currentEvent.setExtendedProp('service', response.service); // Update service prop
+                        currentEvent.setExtendedProp('journal_entry_content', response.journal_entry.content);
+                        currentEvent.setExtendedProp('journal_entry_id', response.journal_entry.id);
+                        appointmentForm.reset();
+                        appointmentModal.hide();
+                    },
+                    error: function(xhr) {
+                        alert('Error: ' + xhr.responseText);
+                    }
+                });
+            } else {
+                // Create new event
+                $.ajax({
+                    url: '/journals/api/appointments/create/',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(eventData),
+                    success: function(response) {
+                        calendar.addEvent({
+                            id: response.id,
+                            title: response.title,
+                            start: response.start,
+                            client: response.client,
+                            service: response.service, // Set service prop
+                            journal_entry_content: response.journal_entry.content,
+                            journal_entry_id: response.journal_entry.id
+                        });
+                        calendar.unselect();
+                        appointmentForm.reset();
+                        appointmentModal.hide();
+                    },
+                    error: function(xhr) {
+                        alert('Error: ' + xhr.responseText);
+                    }
+                });
+            }
+        });
+
+        deleteButton.addEventListener('click', function() {
+            if (currentEvent) {
+                $.ajax({
+                    url: `/journals/api/appointments/${currentEvent.id}/delete/`,
+                    method: 'DELETE',
+                    success: function(response) {
+                        currentEvent.remove();  // Remove the event from the calendar
+                        appointmentForm.reset();
+                        appointmentModal.hide();
+                    },
+                    error: function(xhr) {
+                        alert('Error: ' + xhr.responseText);
+                    }
+                });
+            }
+        });
+
+        calendar.render();
+    });
+</script>
 {% endblock %}
