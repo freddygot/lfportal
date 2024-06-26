@@ -8,6 +8,8 @@ from journals.models import Client, Appointment
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now, timedelta
 from authentication.models import Profile
+from .alarm_system import AlarmSystem, rule_low_average_patients_per_weekday
+
 
 def register(request):
     if request.method == 'POST':
@@ -59,28 +61,10 @@ def franchise_taker_profile_view(request, username):
 
     # Gjennomsnittlig antall pasienter per ukedag de siste 30 dagene (mandag til fredag)
     start_date = now() - timedelta(days=30)
-    appointments_last_30_days = Appointment.objects.filter(client__in=clients, date__gte=start_date)
-    
-    weekday_counts = [0] * 5  # Mandag til fredag
-    for appointment in appointments_last_30_days:
-        weekday = appointment.date.weekday()
-        if weekday < 5:  # Mandag til fredag
-            weekday_counts[weekday] += 1
-
     total_weekdays = (now().date() - start_date.date()).days
     num_weeks = total_weekdays // 7
     extra_days = total_weekdays % 7
-
-    # Beregn antall virkedager (mandag til fredag) i de siste 30 dagene
     num_weekdays = num_weeks * 5 + min(extra_days, 5)
-
-    if num_weekdays > 0:
-        average_patients_per_weekday = sum(weekday_counts) / num_weekdays
-    else:
-        average_patients_per_weekday = 0
-
-    # Formater til én desimal
-    profile.key_metrics['average_patients_per_weekday'] = format(average_patients_per_weekday, '.1f')
 
     # Hent gruppene brukeren tilhører
     groups = user.groups.all()
@@ -88,13 +72,22 @@ def franchise_taker_profile_view(request, username):
     # Hent ansatte som tilhører samme gruppe
     employees = User.objects.filter(groups__in=groups).exclude(id=user.id)
 
+    # Opprett og evaluer alarmsystemet for hver ansatt
+    alarms = []
+    for employee in employees:
+        alarm_system = AlarmSystem(employee, start_date, num_weekdays)
+        alarm_system.add_rule(rule_low_average_patients_per_weekday)
+        # Legg til flere regler etter behov
+        alarm_results = alarm_system.evaluate()
+        is_alarm = any(alarm_results.values())
+        alarms.append((employee, is_alarm))
+
     return render(request, 'authentication/franchise_taker_profile.html', {
         'user': user,
         'profile': profile,
         'groups': groups,
-        'employees': employees
+        'alarms': alarms
     })
-
 
 
 @login_required

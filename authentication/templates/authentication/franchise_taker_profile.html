@@ -21,9 +21,11 @@
     <div>
         <h3>Employees in the Same Group</h3>
         <ul>
-            {% for employee in employees %}
+            {% for employee, alarm in alarms %}
                 <li>
-                    <a href="{% url 'employee_profile' employee.username %}">{{ employee.get_full_name }}</a>
+                    <a href="{% url 'employee_profile' employee.username %}" style="color: {% if alarm %}red{% else %}green{% endif %};">
+                        {{ employee.get_full_name }}
+                    </a>
                 </li>
             {% endfor %}
         </ul>
