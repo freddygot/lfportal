@@ -1,0 +1,32 @@
+<!-- templates/authentication/franchise_taker_profile.html -->
+
+{% extends "base.html" %}
+
+{% block title %}Franchise-taker Profile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ user.get_full_name }}'s Profile</h1>
+    <h2>Role: Franchise-taker</h2>
+
+    <div>
+        <h3>Key Metrics</h3>
+        <ul>
+            <li>Number of Patients: {{ profile.key_metrics.number_of_patients }}</li>
+            <li>Average Appointments per Patient: {{ profile.key_metrics.average_appointments_per_patient }}</li>
+            <li>Average Patients per Weekday (Last 30 days): {{ profile.key_metrics.average_patients_per_weekday }}</li>
+        </ul>
+    </div>
+
+    <div>
+        <h3>Employees in the Same Group</h3>
+        <ul>
+            {% for employee in employees %}
+                <li>
+                    <a href="{% url 'employee_profile' employee.username %}">{{ employee.get_full_name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
