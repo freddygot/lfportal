@@ -1,7 +1,5 @@
-# authentication/alarm_system.py
-from datetime import timedelta
-from django.utils.timezone import now
-from journals.models import Appointment, Client
+from django.utils.timezone import now, timedelta
+from journals.models import Client, Appointment
 
 class AlarmSystem:
     def __init__(self, employee, start_date, num_weekdays):
@@ -19,11 +17,10 @@ class AlarmSystem:
             alarms[rule.__name__] = rule(self.employee, self.start_date, self.num_weekdays)
         return alarms
 
-# Regler for alarmsystemet
 def rule_low_average_patients_per_weekday(employee, start_date, num_weekdays):
     clients = Client.objects.filter(psychologist=employee)
     appointments_last_30_days = Appointment.objects.filter(client__in=clients, date__gte=start_date)
-    
+
     weekday_counts = [0] * 5  # Mandag til fredag
     for appointment in appointments_last_30_days:
         weekday = appointment.date.weekday()
@@ -37,7 +34,21 @@ def rule_low_average_patients_per_weekday(employee, start_date, num_weekdays):
 
     return average_patients_per_weekday < 3.5
 
-# Eksempel på flere regler som kan legges til senere
-def another_rule_example(employee, start_date, num_weekdays):
-    # Her kan du legge til logikk for en annen regel
-    return False
+def rule_no_recent_or_future_appointments(employee, start_date, num_weekdays):
+    two_weeks_ago = now() - timedelta(days=14)
+    clients = Client.objects.filter(psychologist=employee)
+
+    # Klienter uten nylige avtaler
+    clients_without_recent_appointments = clients.exclude(
+        appointment__date__gte=two_weeks_ago
+    )
+
+    # Klienter uten fremtidige avtaler
+    clients_without_future_appointments = clients.exclude(
+        appointment__date__gt=now()
+    )
+
+    # Finn klienter som oppfyller begge kriteriene
+    clients_to_follow_up = clients_without_recent_appointments & clients_without_future_appointments
+
+    return list(clients_to_follow_up)

@@ -1,26 +1,23 @@
 {% extends "base.html" %}
-
-{% block title %}Profil - {{ user.username }}{% endblock %}
-
 {% block content %}
-<h2>Profil for {{ user.username }}</h2>
+<div class="profile">
+    <h2>{{ user.get_full_name }}</h2>
+    <p>Role: {{ profile.get_role_display }}</p>
+    <ul>
+        <li>Number of Patients: {{ profile.key_metrics.number_of_patients }}</li>
+        <li>Average Appointments per Patient: {{ profile.key_metrics.average_appointments_per_patient }}</li>
+        <li>Average Patients per Weekday (Last 30 days): {{ profile.key_metrics.average_patients_per_weekday }}</li>
+    </ul>
 
-{% if error %}
-    <p>{{ error }}</p>
-{% else %}
-    <p>Rolle: {{ profile.role }}</p>
-    <p>Key Metrics:</p>
-    <ul>
-        <li>Antall pasienter: {{ profile.key_metrics.number_of_patients }}</li>
-        <li>Gjennomsnittlig antall avtaler per pasient: {{ profile.key_metrics.average_appointments_per_patient }}</li>
-        <li>Gjennomsnittlig antall pasienter per ukedag (mandag til fredag) de siste 30 dagene: {{ profile.key_metrics.average_patients_per_weekday }}</li>
-    </ul>
-    <p>Grupper:</p>
-    <ul>
-        {% for group in groups %}
-            <li>{{ group.name }}</li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'edit_profile' %}">Rediger profil</a>
-{% endif %}
+    {% if notis.rule_no_recent_or_future_appointments %}
+    <div class="alert alert-danger">
+        <h4>Clients to Follow Up</h4>
+        <ul>
+            {% for client in notis.rule_no_recent_or_future_appointments %}
+            <li>{{ client.name }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

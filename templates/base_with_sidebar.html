@@ -39,13 +39,24 @@
         .navbar {
             margin-left: 250px; /* Adjust this based on the width of your sidebar */
         }
+        .nav-item form {
+            display: inline; 
+            padding: 0;
+            border: none;
+            background: none;
+            margin: 0; /* Add this line */
+        }
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+        }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Franchise Platform</a>
+            <a class="navbar-brand" href="#">Lian & Fjell</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -60,6 +71,13 @@
                 </ul>
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            {% if user.profile.role == 'franchise_taker' %}
+                                <a class="nav-link" href="{% url 'franchise_taker_profile' user.username %}">Min profil</a>
+                            {% else %}
+                                <a class="nav-link" href="{% url 'employee_profile' user.username %}">Min profil</a>
+                            {% endif %}
+                        </li>
                         <li class="nav-item">
                             <form method="post" action="{% url 'logout' %}">
                                 {% csrf_token %}

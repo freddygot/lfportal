@@ -8,8 +8,7 @@ from journals.models import Client, Appointment
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now, timedelta
 from authentication.models import Profile
-from .alarm_system import AlarmSystem, rule_low_average_patients_per_weekday
-
+from .alarm_system import AlarmSystem, rule_low_average_patients_per_weekday, rule_no_recent_or_future_appointments
 
 def register(request):
     if request.method == 'POST':
@@ -26,20 +25,16 @@ class LoginView(DjangoLoginView):
     template_name = 'authentication/login.html'
 
 @login_required
-def profile_view(request, username):
-    try:
-        user = get_object_or_404(User, username=username)
-        profile = user.profile
+def profile_view(request):
+    user = request.user
+    profile = user.profile
 
-        if profile.role == 'franchise_taker':
-            return redirect('franchise_taker_profile', username=username)
-        else:
-            return redirect('employee_profile', username=username)
-
-    except Exception as e:
-        # Logg feilen og returner en melding
-        print(f"Error in profile_view: {e}")
-        return render(request, 'authentication/profile.html', {'error': 'An error occurred while retrieving the profile.'})
+    if profile.role == 'franchise_taker':
+        return redirect('franchise_taker_profile', username=user.username)
+    elif profile.role == 'employee':
+        return redirect('employee_profile', username=user.username)
+    else:
+        return render(request, 'authentication/profile.html', {'error': 'Role not recognized.'})
 
 @login_required
 def franchise_taker_profile_view(request, username):
@@ -61,10 +56,28 @@ def franchise_taker_profile_view(request, username):
 
     # Gjennomsnittlig antall pasienter per ukedag de siste 30 dagene (mandag til fredag)
     start_date = now() - timedelta(days=30)
+    appointments_last_30_days = Appointment.objects.filter(client__in=clients, date__gte=start_date)
+    
+    weekday_counts = [0] * 5  # Mandag til fredag
+    for appointment in appointments_last_30_days:
+        weekday = appointment.date.weekday()
+        if weekday < 5:  # Mandag til fredag
+            weekday_counts[weekday] += 1
+
     total_weekdays = (now().date() - start_date.date()).days
     num_weeks = total_weekdays // 7
     extra_days = total_weekdays % 7
+
+    # Beregn antall virkedager (mandag til fredag) i de siste 30 dagene
     num_weekdays = num_weeks * 5 + min(extra_days, 5)
+
+    if num_weekdays > 0:
+        average_patients_per_weekday = sum(weekday_counts) / num_weekdays
+    else:
+        average_patients_per_weekday = 0
+
+    # Formater til én desimal
+    profile.key_metrics['average_patients_per_weekday'] = format(average_patients_per_weekday, '.1f')
 
     # Hent gruppene brukeren tilhører
     groups = user.groups.all()
@@ -77,6 +90,7 @@ def franchise_taker_profile_view(request, username):
     for employee in employees:
         alarm_system = AlarmSystem(employee, start_date, num_weekdays)
         alarm_system.add_rule(rule_low_average_patients_per_weekday)
+        alarm_system.add_rule(rule_no_recent_or_future_appointments)
         # Legg til flere regler etter behov
         alarm_results = alarm_system.evaluate()
         is_alarm = any(alarm_results.values())
@@ -88,7 +102,6 @@ def franchise_taker_profile_view(request, username):
         'groups': groups,
         'alarms': alarms
     })
-
 
 @login_required
 def employee_profile_view(request, username):
@@ -136,7 +149,19 @@ def employee_profile_view(request, username):
     # Hent gruppene brukeren tilhører
     groups = user.groups.all()
 
-    return render(request, 'authentication/employee_profile.html', {'user': user, 'profile': profile, 'groups': groups})
+    # Opprett og evaluer alarmsystemet for brukeren
+    alarm_system = AlarmSystem(user, start_date, num_weekdays)
+    alarm_system.add_rule(rule_no_recent_or_future_appointments)
+    # Legg til flere regler etter behov
+    alarm_results = alarm_system.evaluate()
+    notis = {key: value for key, value in alarm_results.items() if value}
+
+    return render(request, 'authentication/employee_profile.html', {
+        'user': user,
+        'profile': profile,
+        'groups': groups,
+        'notis': notis
+    })
 
 @login_required
 def edit_profile(request):
