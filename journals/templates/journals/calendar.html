@@ -117,7 +117,7 @@
                 selectable: true,
                 select: function(info) {
                     appointmentForm.reset();
-                    appointmentModalLabel.innerText = 'Create Appointment';
+                    document.getElementById('appointmentModalLabel').innerText = 'Create Appointment';
                     saveButton.innerText = 'Save changes';
                     deleteButton.style.display = 'none';  // Hide delete button when creating
                     appointmentDate.value = info.startStr.split('T')[0];
@@ -128,7 +128,7 @@
                     appointmentModal.show();
                 },
                 eventClick: function(info) {
-                    appointmentModalLabel.innerText = 'Edit Appointment';
+                    document.getElementById('appointmentModalLabel').innerText = 'Edit Appointment';
                     saveButton.innerText = 'Update';
                     deleteButton.style.display = 'block';  // Show delete button when editing
                     currentEvent = info.event;  // Track current event
