@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ user.get_full_name }}'s Dashboard</h1>
+<p>Role: Franchise Taker</p>
+
+<h2>Key Metrics</h2>
+<ul>
+    <li>Number of Patients: {{ profile.key_metrics.number_of_patients }}</li>
+    <li>Average Appointments per Patient: {{ profile.key_metrics.average_appointments_per_patient }}</li>
+    <li>Average Patients per Weekday (Last 30 days): {{ profile.key_metrics.average_patients_per_weekday }}</li>
+</ul>
+
+<h2>Employees</h2>
+<ul>
+    {% for employee, alarm in alarms %}
+    <li>
+        <a href="{% url 'employee_dashboard' employee.username %}" style="color: {% if alarm %}red{% else %}green{% endif %};">
+            {{ employee.get_full_name }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

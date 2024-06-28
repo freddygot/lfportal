@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Employee Dashboard</h1>
+<p>Velkommen, {{ user.username }}!</p>
+<ul>
+    <li>Antall pasienter: {{ profile.key_metrics.number_of_patients }}</li>
+    <li>Gjennomsnittlig antall avtaler per pasient: {{ profile.key_metrics.average_appointments_per_patient }}</li>
+    <li>Gjennomsnittlig antall pasienter per ukedag de siste 30 dagene: {{ profile.key_metrics.average_patients_per_weekday }}</li>
+</ul>
+{% endblock %}
