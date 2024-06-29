@@ -1,5 +1,3 @@
-# journals/admin.py
-
 from django.contrib import admin
 from .models import Client, Journal, Appointment, Service
 from django import forms
@@ -41,7 +39,7 @@ class AppointmentAdmin(admin.ModelAdmin):
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     form = ServiceAdminForm
-    list_display = ('name', 'duration', 'price')
+    list_display = ('name', 'duration_in_minutes', 'price')
     search_fields = ('name',)
     list_filter = ('duration', 'price')
 

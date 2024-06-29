@@ -8,6 +8,7 @@ from django.views.decorators.http import require_http_methods
 import json
 from .models import Client, Journal, Appointment, Service
 from .forms import ClientForm, JournalForm, AppointmentForm
+import datetime
 
 # Existing views for clients and journals
 @login_required

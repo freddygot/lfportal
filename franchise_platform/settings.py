@@ -38,10 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
     'authentication',
     'journals',
     'kurs',
     'prosedyrer',
+    'feedback',
 
 ]
 
@@ -111,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Oslo'
 
 USE_I18N = True
 
@@ -132,3 +134,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/auth/login/'
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'send.one.com'  # SMTP-serveren du bruker
+EMAIL_PORT = 587  # Portnummer, f.eks. 587 for TLS
+EMAIL_USE_TLS = True  # Bruk True for TLS
+EMAIL_HOST_USER = 'fredrik@lianfjell.no'  # Din e-postadresse
+EMAIL_HOST_PASSWORD = 'mf6bqua2'  # Ditt e-postpassord
+DEFAULT_FROM_EMAIL = 'fredrik@lianfjell.no'

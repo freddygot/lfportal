@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <title>Feedback Skjema</title>
+</head>
+<body>
+    <h2>Feedback Skjema</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="appointment_id" value="{{ appointment_id }}">
+        {{ form.as_p }}
+        <button type="submit">Send inn</button>
+    </form>
+</body>
+</html>
