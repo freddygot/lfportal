@@ -1,16 +1,21 @@
 <!DOCTYPE html>
-<html lang="no">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Feedback Skjema</title>
+    <title>ORS Feedback Form</title>
 </head>
 <body>
-    <h2>Feedback Skjema</h2>
+    <h1>ORS Feedback Form</h1>
     <form method="post">
         {% csrf_token %}
-        <input type="hidden" name="appointment_id" value="{{ appointment_id }}">
-        {{ form.as_p }}
-        <button type="submit">Send inn</button>
+        <label for="question_1">Personlig: Hvordan jeg har det med meg selv</label>
+        <input type="range" id="question_1" name="question_1" min="1" max="10"><br>
+        <label for="question_2">Mellommenneskelig: Partner, familie og nære relasjoner</label>
+        <input type="range" id="question_2" name="question_2" min="1" max="10"><br>
+        <label for="question_3">Sosialt: Arbeid, skole, venner</label>
+        <input type="range" id="question_3" name="question_3" min="1" max="10"><br>
+        <label for="question_4">Generelt: Generell opplevelse av hvordan jeg har det</label>
+        <input type="range" id="question_4" name="question_4" min="1" max="10"><br>
+        <button type="submit">Submit</button>
     </form>
 </body>
 </html>

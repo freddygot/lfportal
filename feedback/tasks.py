@@ -3,11 +3,16 @@ from django.core.mail import send_mail
 from django.urls import reverse
 from django.utils import timezone
 from datetime import datetime, timedelta
-from .models import Appointment
+from journals.models import Appointment
 
 def send_feedback_email(appointment_id):
+    from django.urls import reverse
+    from django.core.mail import send_mail
+    from journals.models import Appointment
+
     appointment = Appointment.objects.get(id=appointment_id)
     feedback_url = reverse('feedback_form', args=[appointment.id])
+    feedback_url = f"http://127.0.0.1:8000{feedback_url}"  # Husk å endre dette til din faktiske domenenavn
     message = f'Hi {appointment.client.name},\n\nPlease fill out the feedback form before your appointment: {feedback_url}\n\nThank you!'
     send_mail(
         'Feedback Form',

@@ -8,7 +8,7 @@ urlpatterns = [
     path('journals/', include('journals.urls')),
     path('kurs/', include('kurs.urls')),
     path('prosedyrer/', include('prosedyrer.urls')),
-    path('feedback/', include('feedback.urls')),  # Inkluder feedback-appen
+    path('feedback/', include('feedback.urls')),
     path('', dashboard_view, name='dashboard'),  # Oppdater denne linjen
     path('auth/', include('django.contrib.auth.urls')),  # Dette vil inkludere login, logout, password_change osv.
 
