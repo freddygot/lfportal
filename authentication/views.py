@@ -160,7 +160,7 @@ def employee_dashboard_view(request, username):
     for key, value in alarm_results.items():
         if value:
             if key == 'rule_no_recent_or_future_appointments':
-                notis[key] = [client.name for client in value]
+                notis[key] = value  # Returner klientobjektene
             else:
                 notis[key] = value
 
@@ -170,6 +170,7 @@ def employee_dashboard_view(request, username):
         'groups': groups,
         'notis': notis
     })
+
 
 
 @login_required

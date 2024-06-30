@@ -15,12 +15,17 @@
     {% if notis %}
         {% for rule, value in notis.items %}
             <li style="color: red;">
-                {{ rule }}{% if rule == 'rule_no_recent_or_future_appointments' %}: {{ value|join:", " }}{% endif %}
+                {{ rule }}{% if rule == 'rule_no_recent_or_future_appointments' %}:
+                    {% for client in value %}
+                        <a href="{% url 'client_detail' client.id %}">{{ client.name }}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                {% endif %}
             </li>
         {% endfor %}
     {% else %}
         <li>Ingen utløste alarmer</li>
     {% endif %}
 </ul>
+
 
 {% endblock %}
