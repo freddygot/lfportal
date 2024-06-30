@@ -65,6 +65,7 @@ def client_list(request):
 def client_detail(request, pk):
     client = get_object_or_404(Client, pk=pk)
     appointments = Appointment.objects.filter(client=client)
+    journals = Journal.objects.filter(client=client)
 
     # Generate ORS progress graph
     feedbacks = ORSFeedback.objects.filter(client=client).order_by('date')
@@ -92,6 +93,7 @@ def client_detail(request, pk):
     return render(request, 'journals/client_detail.html', {
         'client': client,
         'appointments': appointments,
+        'journals': journals,
         'graph': image_base64
     })
 
@@ -205,7 +207,7 @@ def api_appointment_create(request):
             client = Client.objects.get(id=client_id)
             service = Service.objects.get(id=service_id)
             journal_entry_data = data.get('journal_entry')
-            if journal_entry_data and journal_entry_data.get('id'):
+            if (journal_entry_data and journal_entry_data.get('id')):
                 journal_entry = Journal.objects.get(id=journal_entry_data['id'])
                 journal_entry.content = journal_entry_data['content']
                 journal_entry.save()
@@ -268,7 +270,7 @@ def api_appointment_edit(request, pk):
             appointment.time = time
 
             journal_entry_data = data.get('journal_entry')
-            if journal_entry_data and journal_entry_data.get('id'):
+            if (journal_entry_data and journal_entry_data.get('id')):
                 journal_entry = Journal.objects.get(id=journal_entry_data['id'])
                 journal_entry.content = journal_entry_data['content']
                 journal_entry.save()

@@ -16,5 +16,27 @@
         <h2>ORS Progress</h2>
         <img src="data:image/png;base64,{{ graph }}" alt="ORS Progress Graph">
     </div>
+
+    <div>
+        <h2>Appointments</h2>
+        <ul>
+            {% for appointment in appointments %}
+                <li>{{ appointment.date }} - {{ appointment.time }}: {{ appointment.title }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div>
+        <h2>Journal Notes</h2>
+        <ul>
+            {% for journal in journals %}
+                <li>
+                    <strong>{{ journal.title }}</strong><br>
+                    {{ journal.content|linebreaks }}<br>
+                    <em>{{ journal.created_at }}</em>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 </html>
