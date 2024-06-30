@@ -14,10 +14,17 @@ from .tasks import send_feedback_email
 class SubmitORSFeedback(View):
     def get(self, request, appointment_id):
         appointment = get_object_or_404(Appointment, id=appointment_id)
+        # Check if feedback already exists for this appointment
+        if ORSFeedback.objects.filter(appointment=appointment).exists():
+            return render(request, 'feedback/already_submitted.html', {'appointment': appointment})
         return render(request, 'feedback/feedback_form.html', {'appointment': appointment})
 
     def post(self, request, appointment_id):
         appointment = get_object_or_404(Appointment, id=appointment_id)
+        # Check if feedback already exists for this appointment
+        if ORSFeedback.objects.filter(appointment=appointment).exists():
+            return render(request, 'feedback/already_submitted.html', {'appointment': appointment})
+
         question_1 = int(request.POST['question_1'])
         question_2 = int(request.POST['question_2'])
         question_3 = int(request.POST['question_3'])

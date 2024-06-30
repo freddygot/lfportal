@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feedback Already Submitted</title>
+</head>
+<body>
+    <h1>Feedback Already Submitted</h1>
+    <p>You have already submitted feedback for this appointment.</p>
+    <a href="{% url 'client_detail' appointment.client.id %}">Back to Client Profile</a>
+</body>
+</html>
