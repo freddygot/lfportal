@@ -1,17 +1,123 @@
 <!-- journals/templates/journals/client_list.html -->
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client List</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #f8f9fa;
+            padding-top: 20px;
+            border-right: 1px solid #dee2e6;
+            z-index: 1000;
+        }
+        .sidebar .nav-link {
+            color: #000;
+            padding: 10px 15px;
+        }
+        .sidebar .nav-link:hover {
+            background-color: #e9ecef;
+            color: #000;
+        }
+        .sidebar .nav-link.active {
+            font-weight: bold;
+            background-color: #e9ecef;
+        }
+        .main-content {
+            margin-left: 250px; /* Adjust this based on the width of your sidebar */
+            padding: 20px;
+        }
+        .navbar {
+            margin-left: 250px; /* Adjust this based on the width of your sidebar */
+        }
+        .nav-item form {
+            display: inline; 
+            padding: 0;
+            border: none;
+            background: none;
+            margin: 0;
+        }
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+        }
+    </style>
 </head>
 <body>
-    <h2>Client List</h2>
-    <ul>
-        {% for client in clients %}
-            <li><a href="{% url 'client_detail' client.pk %}">{{ client.name }}</a> ({{ client.email }})</li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'client_create' %}">Create new client</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Lian & Fjell</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'calendar_view' %}">Calendar</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            {% if user.profile.role == 'franchise_taker' %}
+                                <a class="nav-link" href="{% url 'franchise_taker_profile' user.username %}">Min profil</a>
+                            {% else %}
+                                <a class="nav-link" href="{% url 'employee_profile' user.username %}">Min profil</a>
+                            {% endif %}
+                        </li>
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-link nav-link" style="display: inline; padding: 0; border: none; background: none;">Logg ut</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Logg inn</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-auto">
+                <div class="sidebar">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'calendar_view' %}">Calendar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'client_list' %}">Clients</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col main-content">
+                <h2>Client List</h2>
+                <ul>
+                    {% for client in clients %}
+                        <li><a href="{% url 'client_detail' client.pk %}">{{ client.name }}</a> ({{ client.email }})</li>
+                    {% endfor %}
+                </ul>
+                <a href="{% url 'client_create' %}">Create new client</a>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

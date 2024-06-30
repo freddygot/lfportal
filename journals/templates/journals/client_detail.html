@@ -1,11 +1,9 @@
 <!-- journals/templates/journals/client_detail.html -->
-{% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ client.name }}</title>
-</head>
-<body>
+{% extends "base_with_sidebar.html" %}
+
+{% block title %}{{ client.name }}{% endblock %}
+
+{% block content %}
     <h2>{{ client.name }}</h2>
     <p>Email: {{ client.email }}</p>
     <a href="{% url 'client_edit' client.pk %}">Edit</a> | 
@@ -18,25 +16,28 @@
     </div>
 
     <div>
-        <h2>Appointments</h2>
+        <h2>Journal Notes</h2>
         <ul>
-            {% for appointment in appointments %}
-                <li>{{ appointment.date }} - {{ appointment.time }}: {{ appointment.title }}</li>
+            {% for journal in journals %}
+                <li>
+                    <h3>{{ journal.title }}</h3>
+                    <p>{{ journal.content }}</p>
+                    <small>{{ journal.created_at }}</small>
+                </li>
             {% endfor %}
         </ul>
     </div>
 
     <div>
-        <h2>Journal Notes</h2>
+        <h2>Appointments</h2>
         <ul>
-            {% for journal in journals %}
+            {% for appointment in appointments %}
                 <li>
-                    <strong>{{ journal.title }}</strong><br>
-                    {{ journal.content|linebreaks }}<br>
-                    <em>{{ journal.created_at }}</em>
+                    <h3>{{ appointment.title }}</h3>
+                    <p>{{ appointment.date }} {{ appointment.time }}</p>
+                    <p>Service: {{ appointment.service.name }}</p>
                 </li>
             {% endfor %}
         </ul>
     </div>
-</body>
-</html>
+{% endblock %}
