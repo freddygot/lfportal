@@ -7,6 +7,12 @@ class Client(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     psychologist = models.ForeignKey(User, on_delete=models.CASCADE)
+    birth_date = models.DateField(null=True, blank=True)
+    personal_number = models.CharField(max_length=11, null=True, blank=True)
+    gender = models.CharField(max_length=10, choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')], null=True, blank=True)
+    address = models.CharField(max_length=255, null=True, blank=True)
+    postal_code = models.CharField(max_length=10, null=True, blank=True)
+    municipality = models.CharField(max_length=100, null=True, blank=True)
 
 class Service(models.Model):
     name = models.CharField(max_length=200)
