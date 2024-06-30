@@ -5,7 +5,14 @@ from .models import Client, Journal, Appointment, Service
 class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
-        fields = ['name', 'email', 'psychologist']
+        fields = [
+            'name', 'email', 'birth_date', 'personal_number', 'gender', 
+            'address', 'postal_code', 'municipality', 'psychologist'
+        ]
+        widgets = {
+            'birth_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        }
+
 
 class JournalForm(forms.ModelForm):
     class Meta:
