@@ -6,8 +6,12 @@ from django.utils.dateparse import parse_datetime
 from django.core.exceptions import ValidationError
 from django.views.decorators.http import require_http_methods
 import json
+import matplotlib.pyplot as plt
+import io
+import base64
 from .models import Client, Journal, Appointment, Service
 from .forms import ClientForm, JournalForm, AppointmentForm
+from feedback.models import ORSFeedback
 import datetime
 
 # Existing views for clients and journals
@@ -60,7 +64,36 @@ def client_list(request):
 @login_required
 def client_detail(request, pk):
     client = get_object_or_404(Client, pk=pk)
-    return render(request, 'journals/client_detail.html', {'client': client})
+    appointments = Appointment.objects.filter(client=client)
+
+    # Generate ORS progress graph
+    feedbacks = ORSFeedback.objects.filter(client=client).order_by('date')
+
+    dates = [feedback.date for feedback in feedbacks]
+    scores = [feedback.total_score for feedback in feedbacks]
+
+    plt.figure(figsize=(10, 5))
+    plt.plot(dates, scores, marker='o')
+    plt.title('ORS Progress Over Time')
+    plt.xlabel('Date')
+    plt.ylabel('Total Score')
+    plt.ylim(0, 40)
+
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    plt.close()
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    buffer.close()
+
+    image_base64 = base64.b64encode(image_png)
+    image_base64 = image_base64.decode('utf-8')
+
+    return render(request, 'journals/client_detail.html', {
+        'client': client,
+        'appointments': appointments,
+        'graph': image_base64
+    })
 
 @login_required
 def client_create(request):

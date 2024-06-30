@@ -11,5 +11,10 @@
     <a href="{% url 'client_edit' client.pk %}">Edit</a> | 
     <a href="{% url 'client_delete' client.pk %}">Delete</a>
     <p><a href="{% url 'client_list' %}">Back to list</a></p>
+
+    <div>
+        <h2>ORS Progress</h2>
+        <img src="data:image/png;base64,{{ graph }}" alt="ORS Progress Graph">
+    </div>
 </body>
 </html>

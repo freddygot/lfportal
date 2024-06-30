@@ -33,4 +33,7 @@ urlpatterns = [
 
     # Calendar URL
     path('calendar/', views.calendar_view, name='calendar_view'),
+
+    # ORS Progress Graph URL
+    path('clients/<int:pk>/ors_progress/', views.client_detail, name='client_ors_progress'),
 ]
