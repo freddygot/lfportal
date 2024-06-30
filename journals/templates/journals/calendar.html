@@ -79,7 +79,7 @@
             var saveButton = document.getElementById('saveAppointment');
             var deleteButton = document.getElementById('deleteAppointment');
             var currentEvent = null;  // Track the current event for editing
-
+    
             // Fetch clients to populate the dropdown
             function fetchClients() {
                 $.ajax({
@@ -93,7 +93,7 @@
                     }
                 });
             }
-
+    
             // Fetch services to populate the dropdown
             function fetchServices() {
                 $.ajax({
@@ -107,10 +107,10 @@
                     }
                 });
             }
-
+    
             fetchClients();  // Load clients initially
             fetchServices(); // Load services initially
-
+    
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek', // Default view to timeGridWeek
                 headerToolbar: {
@@ -118,7 +118,8 @@
                     center: 'title',
                     right: 'timeGridWeek,dayGridMonth' // Options to switch between week and month view
                 },
-                weekends: false, // Hide weekends
+                locale: 'nb', // Set locale to Norwegian
+                timeZone: 'Europe/Oslo', // Set time zone to Oslo
                 slotMinTime: '06:00:00', // Start time
                 slotMaxTime: '22:00:00', // End time
                 events: '/journals/api/appointments/', // URL for fetching appointments
@@ -149,7 +150,7 @@
                     appointmentModal.show();
                 }
             });
-
+    
             saveButton.addEventListener('click', function() {
                 var clientName = appointmentClient.options[appointmentClient.selectedIndex].text;
                 var eventData = {
@@ -211,7 +212,7 @@
                     });
                 }
             });
-
+    
             deleteButton.addEventListener('click', function() {
                 if (currentEvent) {
                     $.ajax({
@@ -228,8 +229,9 @@
                     });
                 }
             });
-
+    
             calendar.render();
         });
     </script>
+    
     {% endblock %}

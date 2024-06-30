@@ -1,11 +1,26 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<h1>Employee Dashboard</h1>
-<p>Velkommen, {{ user.username }}!</p>
+<h1>{{ user.get_full_name }}'s Dashboard</h1>
+<p>Role: Employee</p>
+
+<h2>Key Metrics</h2>
 <ul>
-    <li>Antall pasienter: {{ profile.key_metrics.number_of_patients }}</li>
-    <li>Gjennomsnittlig antall avtaler per pasient: {{ profile.key_metrics.average_appointments_per_patient }}</li>
-    <li>Gjennomsnittlig antall pasienter per ukedag de siste 30 dagene: {{ profile.key_metrics.average_patients_per_weekday }}</li>
+    <li>Number of Patients: {{ profile.key_metrics.number_of_patients }}</li>
+    <li>Average Appointments per Patient: {{ profile.key_metrics.average_appointments_per_patient }}</li>
+    <li>Average Patients per Weekday (Last 30 days): {{ profile.key_metrics.average_patients_per_weekday }}</li>
 </ul>
+
+<h2>Alarmer</h2>
+<ul>
+    {% if notis %}
+        {% for rule, value in notis.items %}
+            <li style="color: red;">
+                {{ rule }}{% if rule == 'rule_no_recent_or_future_appointments' %}: {{ value|join:", " }}{% endif %}
+            </li>
+        {% endfor %}
+    {% else %}
+        <li>Ingen utløste alarmer</li>
+    {% endif %}
+</ul>
+
 {% endblock %}
