@@ -112,7 +112,13 @@
         fetchServices(); // Load services initially
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
+            initialView: 'timeGridWeek', // Default view to timeGridWeek
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'timeGridWeek,dayGridMonth' // Options to switch between week and month view
+            },
+            weekends: false, // Hide weekends
             events: '/journals/api/appointments/', // URL for fetching appointments
             selectable: true,
             select: function(info) {

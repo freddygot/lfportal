@@ -40,10 +40,11 @@ def journal_create(request):
 def journal_edit(request, pk):
     journal = get_object_or_404(Journal, pk=pk)
     if request.method == 'POST':
-        form = JournalForm(request.POST, instance=journal)
-        if form.is_valid():
-            form.save()
-            return redirect('journal_detail', pk=pk)
+        data = json.loads(request.body)
+        content = data.get('content', '')
+        journal.content = content
+        journal.save()
+        return JsonResponse({'message': 'Journal note updated successfully'})
     else:
         form = JournalForm(instance=journal)
     return render(request, 'journals/journal_form.html', {'form': form})

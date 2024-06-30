@@ -5,7 +5,7 @@ urlpatterns = [
     # Journal URLs
     path('', views.journal_list, name='journal_list'),
     path('<int:pk>/', views.journal_detail, name='journal_detail'),
-    path('new/', views.journal_create, name='journal_create'),
+    path('new/', views.journal_create, name='journal_create'),  # Pass på at denne visningen eksisterer
     path('<int:pk>/edit/', views.journal_edit, name='journal_edit'),
     path('<int:pk>/delete/', views.journal_delete, name='journal_delete'),
 
@@ -33,7 +33,4 @@ urlpatterns = [
 
     # Calendar URL
     path('calendar/', views.calendar_view, name='calendar_view'),
-
-    # ORS Progress Graph URL
-    path('clients/<int:pk>/ors_progress/', views.client_detail, name='client_ors_progress'),
 ]
