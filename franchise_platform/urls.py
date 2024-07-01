@@ -11,5 +11,8 @@ urlpatterns = [
     path('feedback/', include('feedback.urls')),
     path('', dashboard_view, name='dashboard'),  # Oppdater denne linjen
     path('auth/', include('django.contrib.auth.urls')),  # Dette vil inkludere login, logout, password_change osv.
+    path('__debug__/', include('debug_toolbar.urls')),  # Legg til debug toolbar
+
+    
 
 ]

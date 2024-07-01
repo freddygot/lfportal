@@ -11,4 +11,6 @@ urlpatterns = [
     path('profile/employee/<str:username>/', employee_profile_view, name='employee_profile'),
     path('employee_dashboard/<str:username>/', views.employee_dashboard_view, name='employee_dashboard'),
     path('franchise_dashboard/', views.franchise_dashboard_view, name='franchise_dashboard'),  # Legg til denne linjen
+    path('dashboard/', views.franchise_dashboard_view, name='dashboard'),
+
 ]

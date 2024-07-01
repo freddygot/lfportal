@@ -1,78 +1,320 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US" dir="ltr" data-navigation-type="default" data-navbar-horizontal-shape="default">
+{% load static %}
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Franchise Platform{% endblock %}</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- FullCalendar CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet">
-    <style>
-        .main-content {
-            margin-left: 270px; /* Adjust this based on the width of your sidebar */
-        }
-        .nav-item form {
-            display: inline; 
-            padding: 0;
-            border: none;
-            background: none;
-            margin: 0; /* Add this line */
-        }
-        .navbar-nav {
-            display: flex;
-            align-items: center;
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Phoenix</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/phoenix-v1.18.0/public/assets/img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/phoenix-v1.18.0/public/assets/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/phoenix-v1.18.0/public/assets/img/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/phoenix-v1.18.0/public/assets/img/favicons/favicon.ico">
+    <link rel="manifest" href="/static/phoenix-v1.18.0/public/assets/img/favicons/manifest.json">
+    <meta name="msapplication-TileImage" content="/static/phoenix-v1.18.0/public/assets/img/favicons/mstile-150x150.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="/static/phoenix-v1.18.0/public/vendors/simplebar/simplebar.min.js"></script>
+    <script src="/static/phoenix-v1.18.0/public/assets/js/config.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <link href="/static/phoenix-v1.18.0/public/vendors/simplebar/simplebar.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+    <link href="/static/phoenix-v1.18.0/public/assets/css/theme-rtl.min.css" type="text/css" rel="stylesheet" id="style-rtl">
+    <link href="/static/phoenix-v1.18.0/public/assets/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+    <link href="/static/phoenix-v1.18.0/public/assets/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">
+    <link href="/static/phoenix-v1.18.0/public/assets/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
+    <link href="{% static 'phoenix-v1.18.0/public/vendors/dropzone/dropzone.css' %}" rel="stylesheet">
+<link href="{% static 'phoenix-v1.18.0/public/vendors/flatpickr/flatpickr.min.css' %}" rel="stylesheet">
+<link href="{% static 'phoenix-v1.18.0/public/vendors/bootstrap-select/bootstrap-select.min.css' %}" rel="stylesheet">
+    <script>
+    
+      var phoenixIsRTL = window.config.config.phoenixIsRTL;
+      if (phoenixIsRTL) {
+        var linkDefault = document.getElementById('style-default');
+        var userLinkDefault = document.getElementById('user-style-default');
+        linkDefault.setAttribute('disabled', true);
+        userLinkDefault.setAttribute('disabled', true);
+        document.querySelector('html').setAttribute('dir', 'rtl');
+      } else {
+        var linkRTL = document.getElementById('style-rtl');
+        var userLinkRTL = document.getElementById('user-style-rtl');
+        linkRTL.setAttribute('disabled', true);
+        userLinkRTL.setAttribute('disabled', true);
+      }
+    </script>
+        <style>
+        .main {
+            margin-left: 250px; /* Adjust this value based on your sidebar width */
+            padding-top: 60px; /* Adjust this value based on your top navbar height */
         }
     </style>
-    {% block extra_head %}{% endblock %}
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Lian & Fjell</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+  <div class="container-fluid px-0 d-flex">
+    <nav class="navbar navbar-vertical navbar-expand-lg">
+      <div class="collapse navbar-collapse" id="navbarVerticalCollapse">
+        <div class="navbar-vertical-content">
+          <ul class="navbar-nav flex-column" id="navbarVerticalNav">
+            <li class="nav-item">
+              <div class="nav-item-wrapper">
+                <a class="nav-link dropdown-indicator label-1" href="#nv-home" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-home">
+                  <div class="d-flex align-items-center">
+                    <div class="dropdown-indicator-icon-wrapper"><span class="fas fa-caret-right dropdown-indicator-icon"></span></div>
+                    <span class="nav-link-icon"><span data-feather="pie-chart"></span></span>
+                    <span class="nav-link-text">Min klinikk</span>
+                    <span class="fa-solid fa-circle text-info ms-1 new-page-indicator" style="font-size: 6px"></span>
+                  </div>
+                </a>
+                <div class="parent-wrapper label-1">
+                  <ul class="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-home">
+                    <li class="collapsed-nav-item-title d-none">Home</li>
+                    <li class="nav-item"><a class="nav-link" href="/static/phoenix-v1.18.0/public/dashboard/project-management.html">
+                        <div class="d-flex align-items-center"><span class="nav-link-text">Klinikkoversikt</span></div>
+                      </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'calendar_view' %}">Calendar</a>
+                    <li class="nav-item"><a class="nav-link" href="/static/phoenix-v1.18.0/public/apps/e-commerce/admin/orders.html">
+                        <div class="d-flex align-items-center"><span class="nav-link-text">Ansattoversikt</span></div>
+                      </a>
                     </li>
-                </ul>
-                <ul class="navbar-nav">
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            {% if user.profile.role == 'franchise_taker' %}
-                                <a class="nav-link" href="{% url 'franchise_taker_profile' user.username %}">Min profil</a>
-                            {% else %}
-                                <a class="nav-link" href="{% url 'employee_profile' user.username %}">Min profil</a>
-                            {% endif %}
-                        </li>
-                        <li class="nav-item">
-                            <form method="post" action="{% url 'logout' %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-link nav-link" style="display: inline; padding: 0; border: none; background: none;">Logg ut</button>
-                            </form>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Logg inn</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
+                    <li class="nav-item"><a class="nav-link" href="/static/phoenix-v1.18.0/public/dashboard/crm.html">
+                        <div class="d-flex align-items-center"><span class="nav-link-text">Kundeadministrasjon</span></div>
+                      </a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="/static/phoenix-v1.18.0/public/dashboard/travel-agency.html">
+                        <div class="d-flex align-items-center"><span class="nav-link-text">Økonomi</span><span class="badge ms-2 badge badge-phoenix badge-phoenix-warning ">Ny</span></div>
+                      </a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="/static/phoenix-v1.18.0/public/apps/social/feed.html">
+                        <div class="d-flex align-items-center"><span class="nav-link-text">Sosiale medier</span></div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item">
+              <p class="navbar-vertical-label">Apper</p>
+              <hr class="navbar-vertical-line" />
+              <div class="nav-item-wrapper">
+                <a class="nav-link dropdown-indicator label-1" href="#nv-e-commerce" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-e-commerce">
+                  <div class="d-flex align-items-center">
+                    <div class="dropdown-indicator-icon-wrapper"><span class="fas fa-caret-right dropdown-indicator-icon"></span></div>
+                    <span class="nav-link-icon"><span data-feather="calendar"></span></span>
+                    <span class="nav-link-text">MyJournal</span>
+                  </div>
+                </a>
+                <div class="parent-wrapper label-1">
+                  <ul class="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-e-commerce">
+                    <li class="collapsed-nav-item-title d-none">MyJournal</li>
+                    <li class="nav-item"><a class="nav-link" href="/static/phoenix-v1.18.0/public/apps/calendar.html">
+                        <div class="d-flex align-items-center"><span class="nav-link-text">Kalender</span></div>
+                      </a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="/static/phoenix-v1.18.0/public/apps/e-commerce/admin/orders.html">
+                        <div class="d-flex align-items-center"><span class="nav-link-text">Pasienter</span></div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
+      </div>
+      <div class="navbar-vertical-footer">
+        <button class="btn navbar-vertical-toggle border-0 fw-semibold w-100 white-space-nowrap d-flex align-items-center">
+          <span class="uil uil-left-arrow-to-left fs-8"></span>
+          <span class="uil uil-arrow-from-right fs-8"></span>
+          <span class="navbar-vertical-footer-text ms-2">Kollapset visning</span>
+        </button>
+      </div>
     </nav>
-    <div class="main-content container mt-4">
-        {% block content %}{% endblock %}
+    <div class="content-wrapper flex-grow-1">
+      <nav class="navbar navbar-top fixed-top navbar-expand" id="navbarDefault">
+        <div class="collapse navbar-collapse justify-content-between">
+          <div class="navbar-logo">
+            <button class="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
+            <a class="navbar-brand me-1 me-sm-3" href="/static/phoenix-v1.18.0/public/index.html">
+              <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center"><img src="/static/images/logoliten.png" alt="phoenix" width="27" />
+                  <h5 class="logo-text ms-2 d-none d-sm-block">compass</h5>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="search-box navbar-top-search-box d-none d-lg-block" data-list='{"valueNames":["title"]}' style="width:25rem;">
+            <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
+              <input class="form-control search-input fuzzy-search rounded-pill form-control-sm" type="search" placeholder="Søk..." aria-label="Søk" />
+              <span class="fas fa-search search-box-icon"></span>
+            </form>
+            <div class="btn-close position-absolute end-0 top-50 translate-middle cursor-pointer shadow-none" data-bs-dismiss="search">
+              <button class="btn btn-link p-0" aria-label="Lukk"></button>
+            </div>
+            <div class="dropdown-menu border start-0 py-0 overflow-hidden w-100">
+              <div class="scrollbar-overlay" style="max-height: 30rem;">
+                <div class="list pb-3">
+                  <h6 class="dropdown-header text-body-highlight fs-10 py-2">24 <span class="text-body-quaternary">resultater</span></h6>
+                  <hr class="my-0" />
+                  <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Nylig søkt </h6>
+                  <div class="py-2"><a class="dropdown-item" href="/static/phoenix-v1.18.0/public/apps/e-commerce/landing/product-details.html">
+                      <div class="d-flex align-items-center">
+                        <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> Store Macbook</div>
+                      </div>
+                    </a>
+                    <a class="dropdown-item" href="/static/phoenix-v1.18.0/public/apps/e-commerce/landing/product-details.html">
+                      <div class="d-flex align-items-center">
+                        <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> MacBook Air - 13″</div>
+                      </div>
+                    </a>
+                  </div>
+                  <hr class="my-0" />
+                  <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Produkter</h6>
+                  <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="/static/phoenix-v1.18.0/public/apps/e-commerce/landing/product-details.html">
+                      <div class="file-thumbnail me-2"><img class="h-100 w-100 object-fit-cover rounded-3" src="/static/phoenix-v1.18.0/public/assets/img/products/60x60/3.png" alt="" /></div>
+                      <div class="flex-1">
+                        <h6 class="mb-0 text-body-highlight title">MacBook Air - 13″</h6>
+                        <p class="fs-10 mb-0 d-flex text-body-tertiary"><span class="fw-medium text-body-tertiary text-opactity-85">8GB Memory - 1.6GHz - 128GB Storage</span></p>
+                      </div>
+                    </a>
+                    <a class="dropdown-item py-2 d-flex align-items-center" href="/static/phoenix-v1.18.0/public/apps/e-commerce/landing/product-details.html">
+                      <div class="file-thumbnail me-2"><img class="img-fluid" src="/static/phoenix-v1.18.0/public/assets/img/products/60x60/3.png" alt="" /></div>
+                      <div class="flex-1">
+                        <h6 class="mb-0 text-body-highlight title">MacBook Pro - 13″</h6>
+                        <p class="fs-10 mb-0 d-flex text-body-tertiary"><span class="fw-medium text-body-tertiary text-opactity-85">30 Sep at 12:30 PM</span></p>
+                      </div>
+                    </a>
+                  </div>
+                  <hr class="my-0" />
+                  <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Hurtiglenker</h6>
+                  <div class="py-2"><a class="dropdown-item" href="/static/phoenix-v1.18.0/public/apps/e-commerce/landing/product-details.html">
+                      <div class="d-flex align-items-center">
+                        <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-link text-body" data-fa-transform="shrink-2"></span> Support MacBook House</div>
+                      </div>
+                    </a>
+                    <a class="dropdown-item" href="/static/phoenix-v1.18.0/public/apps/e-commerce/landing/product-details.html">
+                      <div class="d-flex align-items-center">
+                        <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-link text-body" data-fa-transform="shrink-2"></span> Store MacBook″</div>
+                      </div>
+                    </a>
+                  </div>
+                  <hr class="my-0" />
+                  <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Filer</h6>
+                  <div class="py-2"><a class="dropdown-item" href="/static/phoenix-v1.18.0/public/apps/e-commerce/landing/product-details.html">
+                      <div class="d-flex align-items-center">
+                        <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-file-zipper text-body" data-fa-transform="shrink-2"></span> Library MacBook folder.rar</div>
+                      </div>
+                    </a>
+                    <a class="dropdown-item" href="/static/phoenix-v1.18.0/public/apps/e-commerce/landing/product-details.html">
+                      <div class="d-flex align-items-center">
+                        <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-file-lines text-body" data-fa-transform="shrink-2"></span> Feature MacBook extensions.txt</div>
+                      </div>
+                    </a>
+                    <a class="dropdown-item" href="/static/phoenix-v1.18.0/public/apps/e-commerce/landing/product-details.html">
+                      <div class="d-flex align-items-center">
+                        <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-image text-body" data-fa-transform="shrink-2"></span> MacBook Pro_13.jpg</div>
+                      </div>
+                    </a>
+                  </div>
+                  <hr class="my-0" />
+                  <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Medlemmer</h6>
+                  <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="/static/phoenix-v1.18.0/public/pages/members.html">
+                      <div class="avatar avatar-l status-online  me-2 text-body">
+                        <img class="rounded-circle " src="/static/phoenix-v1.18.0/public/assets/img/team/40x40/10.webp" alt="" />
+                      </div>
+                      <div class="flex-1">
+                        <h6 class="mb-0 text-body-highlight title">Carry Anna</h6>
+                        <p class="fs-10 mb-0 d-flex text-body-tertiary">anna@technext.it</p>
+                      </div>
+                    </a>
+                    <a class="dropdown-item py-2 d-flex align-items-center" href="/static/phoenix-v1.18.0/public/pages/members.html">
+                      <div class="avatar avatar-l  me-2 text-body">
+                        <img class="rounded-circle " src="/static/phoenix-v1.18.0/public/assets/img/team/40x40/12.webp" alt="" />
+                      </div>
+                      <div class="flex-1">
+                        <h6 class="mb-0 text-body-highlight title">John Smith</h6>
+                        <p class="fs-10 mb-0 d-flex text-body-tertiary">john@technext.it</p>
+                      </div>
+                    </a>
+                    <a class="dropdown-item py-2 d-flex align-items-center" href="/static/phoenix-v1.18.0/public/pages/members.html">
+                      <div class="avatar avatar-l status-online  me-2 text-body">
+                        <img class="rounded-circle " src="/static/phoenix-v1.18.0/public/assets/img/team/40x40/10.webp" alt="" />
+                      </div>
+                      <div class="flex-1">
+                        <h6 class="mb-0 text-body-highlight title">Anna Carry</h6>
+                        <p class="fs-10 mb-0 d-flex text-body-tertiary">anna@technext.it</p>
+                      </div>
+                    </a>
+                    <a class="dropdown-item py-2 d-flex align-items-center" href="/static/phoenix-v1.18.0/public/pages/members.html">
+                      <div class="avatar avatar-l status-online  me-2 text-body">
+                        <img class="rounded-circle " src="/static/phoenix-v1.18.0/public/assets/img/team/40x40/12.webp" alt="" />
+                      </div>
+                      <div class="flex-1">
+                        <h6 class="mb-0 text-body-highlight title">John Smith</h6>
+                        <p class="fs-10 mb-0 d-flex text-body-tertiary">john@technext.it</p>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div class="content">
+        <main class="main" id="top">
+           {% block content %}
+          <!-- Her settes det dynamiske innholdet inn -->
+          {% endblock %}
+        </main>
+      </div>
     </div>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- FullCalendar JS -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
-    {% block extra_scripts %}{% endblock %}
+  </div>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/popper/popper.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/bootstrap/bootstrap.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/anchorjs/anchor.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/is/is.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/fontawesome/all.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/lodash/lodash.min.js' %}"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/list.js/list.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/feather-icons/feather.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/dayjs/dayjs.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/gsap/gsap.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/echarts/echarts.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/chart/chart.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/bootstrap-select/bootstrap-select.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/flatpickr/flatpickr.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/simplebar/simplebar.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/plyr/plyr.polyfilled.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/glightbox/glightbox.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/dropzone/dropzone.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/choices/choices.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/prism/prism.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/typed.js/typed.umd.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/mapbox-gl/mapbox-gl.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/fullcalendar/index.global.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/overlay-scrollbars/OverlayScrollbars.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/countup/countUp.umd.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/leaflet/leaflet.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/leaflet.markercluster/leaflet.markercluster.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/leaflet.tilelayer.colorfilter/leaflet-tilelayer-colorfilter.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/lottie/lottie.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/simplebar/simplebar.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/plyr/plyr.polyfilled.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/dragula/dragula.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/list.js/list.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/notyf/notyf.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/prism/prism.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/vendors/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/assets/js/phoenix.js' %}"></script>
+  <script src="{% static 'phoenix-v1.18.0/public/assets/js/crm-analytics.js' %}"></script>
 </body>
+
 </html>
+

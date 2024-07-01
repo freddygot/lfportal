@@ -12,10 +12,21 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import logging
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+
+# Add these settings
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# This setting is for production
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -25,6 +36,53 @@ SECRET_KEY = 'django-insecure-+bcgzn^-fw4(_)aq_0w3tadz7w=ea2a576q_y5hn-@gzyq06z=
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: True,
+}
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',  # Endre root-nivå til WARNING for å redusere mengden logging
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',  # Endre til INFO for å få litt mer detaljer enn WARNING
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'WARNING',  # Endre til WARNING for å redusere mengden SQL-logging
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'WARNING',  # Endre til WARNING for å redusere mengden forespørselslogging
+            'propagate': True,
+        },
+        # Legg til din egen applikasjons logger med et mer detaljer nivå om nødvendig
+        'authentication': {
+            'handlers': ['console'],
+            'level': 'DEBUG',  # Bruk DEBUG-nivå for detaljert logging i din egen applikasjon
+            'propagate': True,
+        },
+    },
+}
+
 
 ALLOWED_HOSTS = []
 
@@ -44,6 +102,7 @@ INSTALLED_APPS = [
     'kurs',
     'prosedyrer',
     'feedback',
+    'debug_toolbar',
 
 ]
 
@@ -55,6 +114,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'franchise_platform.urls'
@@ -150,3 +210,6 @@ EMAIL_USE_TLS = True  # Bruk True for TLS
 EMAIL_HOST_USER = 'fredrik@lianfjell.no'  # Din e-postadresse
 EMAIL_HOST_PASSWORD = 'mf6bqua2'  # Ditt e-postpassord
 DEFAULT_FROM_EMAIL = 'fredrik@lianfjell.no'
+
+
+
